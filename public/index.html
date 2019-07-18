@@ -2,6 +2,16 @@
 <html amp lang="en">
   <head>
     <meta charset="utf-8" />
+    <script
+      async
+      custom-element="amp-list"
+      src="https://cdn.ampproject.org/v0/amp-list-0.1.js"
+    ></script>
+    <script
+      async
+      custom-template="amp-mustache"
+      src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"
+    ></script>
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <title>Hello, AMPs</title>
     <link
@@ -82,5 +92,18 @@
   </head>
   <body>
     <h1>Welcome to the mobile web</h1>
+
+    <amp-list
+      width="auto"
+      height="100"
+      layout="fixed-height"
+      src="http://localhost:8000/example.json"
+    >
+      <template type="amp-mustache">
+        <div class="url-entry">
+          <a href="{{ url }}">{{ title }}</a>
+        </div>
+      </template>
+    </amp-list>
   </body>
 </html>
