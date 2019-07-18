@@ -1,16 +1,14 @@
 {
-  "name": "noths-amp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "create-next-example-app",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "path": "^0.12.7"
+    "axios": "^0.19.0",
+    "next": "9.0.2",
+    "react": "16.8.6",
+    "react-dom": "16.8.6"
   }
 }
