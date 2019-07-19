@@ -30,22 +30,15 @@ const Index = ({ products, category, banner }) => {
             @font-face {
               font-family: NOTHS2;
               src: url('//cdn.notonthehighstreet.com/stylesheets/fonts/noths_sans_2_semibold.eot?#iefixage') format('embedded-opentype'),
-              url('//cdn.notonthehighstreet.com/stylesheets/fonts/noths_sans_2_semibold.woff') format('woff'),
-              url('//cdn.notonthehighstreet.com/stylesheets/fonts/noths_sans_2_semibold.ttf') format('truetype');
+              url('static/noths_sans_2_semibold.woff') format('woff'),
+              url('static/noths_sans_2_semibold.ttf') format('truetype');
               font-weight: bold;
             }
 
             @font-face {
-              font-family: NOTHS2SEMIBOLD;
-              src: url('//cdn.notonthehighstreet.com/stylesheets/fonts/noths_sans_2_semibold.eot?#iefixage') format('embedded-opentype'),
-              url('//cdn.notonthehighstreet.com/stylesheets/fonts/noths_sans_2_semibold.woff') format('woff'),
-              url('//cdn.notonthehighstreet.com/stylesheets/fonts/noths_sans_2_semibold.ttf') format('truetype');
-            }
-
-            @font-face {
               font-family: NOTHS2BOLD;
-              src: url('//cdn.notonthehighstreet.com/stylesheets/fonts/noths_sans_2_bold.woff') format('woff'),
-              url('//cdn.notonthehighstreet.com/stylesheets/fonts/noths_sans_2_bold.ttf') format('truetype');
+              src: url('static/noths_sans_2_bold.woff') format('woff'),
+              url('static/noths_sans_2_bold.ttf') format('truetype');
             }
 
             @font-face {
@@ -55,7 +48,10 @@ const Index = ({ products, category, banner }) => {
             }
             body {
               margin: 0;
-              font-family: 'system';
+              font-family: NOTHS2, 'system';
+            }
+            *{
+              font-family: NOTHS2, 'system' !important;
             }
 
             .container {
@@ -66,6 +62,8 @@ const Index = ({ products, category, banner }) => {
               width: 45%;
               padding: 5px;
               padding-left: 0px;
+              position:relative;
+              margin-bottom: 12px;
             }
 
             .product-link {
@@ -199,6 +197,82 @@ const Index = ({ products, category, banner }) => {
               font-family: NOTHS2;
               text-align: inherit;
               text-decoration: none;
+              margin-bottom: 4px;
+            }
+
+            .product-prices {
+              font-size: 22px;
+              line-height: 22px;
+              font-family: NOTHS2BOLD;
+              font-weight: 700;
+              color: #555;
+              margin:0;
+
+            }
+
+            .currency{
+              display: inline-block;
+              margin-top: -1px;
+              vertical-align: top;
+              font-size: 14px;
+              line-height: 18px;
+            }
+
+            .delivery{
+              font-weight: 400;
+              text-align: center;
+              text-transform: uppercase;
+              color: #fff;
+              width: 130px;
+              padding: 0;
+              font-size: 12px;
+              background-color: #49565f;
+              font-family: NOTHS2;
+              margin: 5px 0;
+              line-height: 18px;
+
+            }
+
+            .sale-badge{
+              z-index: 3;
+              position: absolute;
+              max-width: none;
+              right: 0px;
+              top: -6px;
+              padding: 0 5.33333px;
+              line-height: 24px;
+              border-radius: 4px;
+              font-family: NOTHS2;
+              font-size: 14px;
+              background-color: #cf4858;
+              color: #fff;
+            }
+
+            .current-and-sale-price{
+              display: flex;
+            }
+
+            .current-price {
+              font-weight: 400;
+    background-image: linear-gradient(transparent 7px,#555 0,#555 9px,transparent 0);
+    vertical-align: top;
+    font-family: NOTHS2;
+    font-size: 14px;
+    line-height: 16px;
+    color: #555;
+    margin:0;
+    padding-left:5px;
+
+            }
+
+            .price-on-sale {
+              margin-left: 8px;
+              color: #cf4858;
+    font-size: 22px;
+    line-height: 16px;
+    font-family: NOTHS2;
+    font-weight: 700;
+    margin: 0;
             }
 
               `
@@ -236,12 +310,17 @@ const Index = ({ products, category, banner }) => {
         </div>
         <div className="listings">
           {products.map(product => {
-            const { title, prices, links, images, on_sale } = product;
-            const priceString = (prices[0].amount / 100).toFixed(2);
+            const { title, prices, links, images, on_sale, free_domestic_delivery, new: isProductNew } = product;
+            const [priceString,fractional] = (prices[0].amount / 100).toFixed(2).split('.');
+            const decimal = fractional === '00' ? '' :`.${fractional}`;
+            let [salePrice,saleFraction] = ((priceString/10) * 2).toFixed(2).split('.');
+            salePrice = priceString - salePrice;
+            const saleDecimal = fractional === '00' ? '' :`.${fractional}`;
             const imageUrl = images[0].href.replace("{size}", "preview");
 
             return (
               <div className="product-card">
+                <div class="sale-badge">{true ? '20% OFF' : ''}</div>
                 <a className="product-link" href={links[0].href}>
                   <amp-img
                     className="product-image"
@@ -250,7 +329,17 @@ const Index = ({ products, category, banner }) => {
                     height="181"
                   />
                   <p className="product-title">{title}</p>
-                  <p className="product-prices">{`£${priceString}`}</p>
+
+                  {false && (<p className="product-prices"><span class="currency">£</span>{`${priceString}${decimal}`}</p>)}
+                  {true && (
+                    <div className="current-and-sale-price">
+                    <p className="current-price"><span class="currency">£</span>{`${priceString}${decimal}`}</p>
+                    <p className="price-on-sale"><span class="currency">£</span>{`${salePrice}${saleDecimal}`}</p>
+                    </div>
+                  )
+                  }
+
+                  <div class="delivery">{free_domestic_delivery ? 'Free uk delivery' : ''}</div>
                 </a>
               </div>
             );
@@ -268,7 +357,7 @@ Index.getInitialProps = async function({ query }) {
   });
 
   const { products, category, banner } = res.data;
-
+  console.log('products is',products);
   return {
     products,
     category,
