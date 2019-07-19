@@ -65,23 +65,21 @@ const Index = ({ products, category, banner }) => {
         </div>
         <div className="listings">
           {products.map(product => {
-            let imageUrl = product.images[0].href.replace("{size}", "preview");
-            imageUrl.replace(
-              "www.public.dev.noths.com",
-              "cdn.notonthehighstreet.com"
-            );
+            const { title, prices, links, images, on_sale } = product;
+            const priceString = (prices[0].amount / 100).toFixed(2);
+            const imageUrl = images[0].href.replace("{size}", "preview");
 
             return (
               <div className="product-card">
-                <a className="product-link" href={product.links[0].href}>
+                <a className="product-link" href={links[0].href}>
                   <amp-img
                     className="product-image"
                     src={imageUrl}
                     width="150"
                     height="150"
                   />
-                  <p>{product.title}</p>
-                  <p>{product.prices[0].amount}</p>
+                  <p>{title}</p>
+                  <p>{`£${priceString}`}</p>
                 </a>
               </div>
             );
@@ -92,16 +90,19 @@ const Index = ({ products, category, banner }) => {
   );
 };
 
-Index.getInitialProps = async function() {
+Index.getInitialProps = async function({ query }) {
+  const { categoryPage } = query;
   const res = await axios({
-    url:
-      "http://noths.service.shared.qa.noths.com/api/category/v1/products?category_path=/gifts"
+    url: `http://noths.service.shared.qa.noths.com/api/category/v1/products?category_path=/${categoryPage}`
   });
 
+  const { products, category, banner } = res.data;
+
   return {
-    products: res.data.products,
-    category: res.data.category,
-    banner: res.data.banner
+    products,
+    category,
+    banner,
+    categoryPage
   };
 };
 
