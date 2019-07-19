@@ -63,22 +63,45 @@ const Index = ({ products, category, banner }) => {
             }
 
             .product-card {
-              width: 50%;
+              width: 45%;
+              padding: 5px;
+              padding-left: 0px;
             }
 
             .product-link {
               display: flex;
               flex-direction: column;
+              text-decoration: none;
             }
 
             .product-image {
-              margin: 0 auto;
+              margin: 0;
+              position:relative;
+            }
+
+            .product-image::after{
+              position: absolute;
+              display: block;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-size: cover;
+              z-index: 1;
+              opacity: 0;
+              box-sizing: border-box;
+              padding: 8px;
+              border: 1px solid rgba(0,0,0,.2);
+              content: attr(aria-label);
+              font-style: italic;
+              color: #000;
+              font-size: 12px;
             }
 
             .listings {
               display: flex;
               flex-wrap: wrap;
-              justify-content: space-evenly;
+              justify-content: space-between;
               margin-top: 10px;
             }
 
@@ -168,6 +191,16 @@ const Index = ({ products, category, banner }) => {
               font-size: 14px;
             }
 
+            .product-title{
+              font-size: 14px;
+              line-height: 18px;
+              font-weight: 400;
+              color: #555;
+              font-family: NOTHS2;
+              text-align: inherit;
+              text-decoration: none;
+            }
+
               `
           }}
         />
@@ -215,11 +248,11 @@ const Index = ({ products, category, banner }) => {
                   <amp-img
                     className="product-image"
                     src={imageUrl}
-                    width="150"
-                    height="150"
+                    width="181"
+                    height="181"
                   />
-                  <p>{product.title}</p>
-                  <p>{product.prices[0].amount}</p>
+                  <p className="product-title">{product.title}</p>
+                  <p className="product-prices">{product.prices[0].amount}</p>
                 </a>
               </div>
             );
